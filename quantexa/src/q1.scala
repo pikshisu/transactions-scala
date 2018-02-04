@@ -7,8 +7,8 @@ object q1 extends App {
   
   // ListBuffer -> Append in constant time
   var records:ListBuffer[(Int, BigDecimal)] = ListBuffer()
-  var day:Int = transactionData(1).transactionDay
-  var total:BigDecimal = transactionData(1).transactionAmount
+  var day:Int = transactionData(0).transactionDay
+  var total:BigDecimal = transactionData(0).transactionAmount
   
   for(i <- 1 until transactionData.length) {
     // Append to ListBuffer if day changes
