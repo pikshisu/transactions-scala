@@ -5,6 +5,9 @@ import scala.collection.mutable.HashMap
 object q3 extends App {
   val transactionData:List[Transaction] = getTransactions()
   
+  // Get days
+  val days: List[Int] = transactionData.groupBy(_.transactionDay).keys.toList.sorted
+  
   // The data we want for each rolling time window
   case class Record(
       day: Int,
@@ -50,7 +53,7 @@ object q3 extends App {
   }
   
   println("Day\tAccID\tMax\tAvg\tAA.tv\tCC.tv\tFF.tv")
-  for(i <- 6 to 29) {
+  for(i <- 6 to days.last) {
     val window: List[Transaction] = transactionData.filter(t => i-5 until i contains t.transactionDay)
     val recordsForDay: List[Record] = statistics(window, i)
     

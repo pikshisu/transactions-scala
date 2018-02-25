@@ -5,27 +5,19 @@ import scala.collection.mutable.ListBuffer
 object q1 extends App {
   val transactionData:List[Transaction] = getTransactions()
   
-  // ListBuffer -> Append in constant time
-  var records:ListBuffer[(Int, BigDecimal)] = ListBuffer()
-  var day:Int = transactionData(0).transactionDay
-  var total:BigDecimal = transactionData(0).transactionAmount
+  // Get days
+  val days: List[Int] = transactionData.groupBy(_.transactionDay).keys.toList.sorted
   
-  for(i <- 1 until transactionData.length) {
-    // Append to ListBuffer if day changes
-    if(day != transactionData(i).transactionDay) {
-      records += ((day, total))
-      day = transactionData(i).transactionDay
-      total = 0.0
-    }
-    total += transactionData(i).transactionAmount
-  }
+  // Sum transactionAmount without losing precision 
+  def sumTransactions(ts: List[Transaction]): BigDecimal = 
+    (BigDecimal(0) /: ts.map(_.transactionAmount)) (_+_)
   
-  // Append final day
-  records += ((day, total))
+  // Group by transaction day, map values to sumTransactions
+  val records: Map[Int, BigDecimal] = transactionData.groupBy(_.transactionDay).mapValues(sumTransactions(_))
   
   println("Day\tTotal")
-  for(t <- records) {
-    println(t._1 + "\t" + t._2)
+  for(td <- days) {
+    println(td + "\t" + records(td))
   }
   
 }
